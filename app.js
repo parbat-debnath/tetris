@@ -1,4 +1,4 @@
-import * as util from './utils/logic.js'
+import * as mod from './modules/logic.js'
 
 const gameArea = document.querySelector("#gamearea");
 
@@ -6,8 +6,8 @@ const gameArea = document.querySelector("#gamearea");
 gameArea.dataset.height = "24";
 gameArea.dataset.width = "12";
 
-util.loadMatrix(gameArea);
+mod.loadMatrix(gameArea);
 
 let square = [{x : 0, y : 0}, {x : 0, y : 1}, {x : 1, y : 0}, {x : 1, y : 1}];
 
-util.startFall(2,square, gameArea);
+mod.startFall(2,square, gameArea);
