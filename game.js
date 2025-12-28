@@ -42,16 +42,13 @@ chunks.push(reverseZ_chunk);
 chunks.push(l_chunk);
 chunks.push(t_chunk);
 
-let speed = 200;
+let speed = 1000;
 let isGameOver = false;
 
 function gameStart() {
   utility.loadGrid(24, 12, gameArea);
   dropRandomChunkLoop(chunks);
 }
-
-console.log(chunks.length);
-
 
 function dropRandomChunk(chunks) {
   let chunk = chunks[Math.floor(Math.random() * chunks.length)];

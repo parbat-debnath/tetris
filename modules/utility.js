@@ -49,7 +49,5 @@ export function getDimention(chunkData) {
     if(cellData.x > maxY) maxY = cellData.y;
   }
 
-  console.log(maxX, maxY, minX, minX);
-
-  return {height : (maxY - minY), width : (maxX - minX)};
+  return {height : (maxY - minY + 1), width : (maxX - minX + 1)};
 }

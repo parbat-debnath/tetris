@@ -1,18 +1,27 @@
 import * as utility from "./utility.js";
 export function freeFallChunk(_chunkData, container, speed) {
+  let containerWidth = +container.dataset.width || 12;
+  let chunkWidth = utility.getDimention(_chunkData).width;
+
+  let startingPoint = Math.floor(
+    Math.random() * (containerWidth - chunkWidth + 1)
+  );
+
   return new Promise(function (resolve, reject) {
     let chunkData = structuredClone(_chunkData);
+    let chunkHeight = utility.getDimention(_chunkData).height;
+    let chunkWidth = utility.getDimention(_chunkData).width;
+    for (let cellData of chunkData) {
+      cellData.x += startingPoint;
+      cellData.y -= chunkHeight;
+    }
+
     let intarvalId = setInterval(() => {
       if (!canMoveDown(chunkData, container)) {
-          clearInterval(intarvalId);
+        clearInterval(intarvalId);
         resolve();
         return;
       }
-
-      let chunkHeight = utility.getDimention(_chunkData).height;
-      console.log(chunkHeight);
-      
-      let chunkWidth = utility.getDimention(_chunkData).width;
 
       for (let cellData of chunkData) {
         let cell = utility.getCellFromData(
