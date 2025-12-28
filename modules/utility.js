@@ -1,27 +1,55 @@
-export function getCell(x, y, container) {
-  return container.children[(y - 1) * 12 + x - 1];
+export function loadGrid(height = 24, width = 12, container) {
+  for (let j = 1; j <= height; j++) {
+    for (let i = 1; i <= width; i++) {
+      let cell = document.createElement("div");
+      cell.dataset.x = i + 1;
+      cell.dataset.y = j + 1;
+      cell.classList.add("cell");
+
+      container.appendChild(cell);
+    }
+  }
 }
 
-export function isInCellStack(cellStack, cell) {
-  for (let cellElement of cellStack) {
-    if (cellElement === cell) return true;
+export function getCellFromData(x, y, container) {
+  let cell = container.children[(y - 1) * 12 + (x - 1)];
+  if(!cell) {
+    cell = document.createElement("div");
+    cell.dataset.x = x;
+    cell.dataset.y = y;
   }
 
+  return cell
+}
+
+export function isInChunk(targetCellData, chunkData) {
+  for(let cellData of chunkData) {
+    if(cellData.x === targetCellData.x && cellData.y === targetCellData.y) {
+      return true;}
+  }
+  
   return false;
 }
 
-export function getDimention(cellArray = []) {
-  let maxX = -999;
-  let minX = 999;
-  let maxY = -999;
-  let minY = 999;
+export function isOccupied(cell) {
+  if(cell.classList.contains("active")) {
+    return true;
+  } else return false;
+}
 
-  for (let cell of cellArray) {
-    if (cell.x < minX) minX = cell.x;
-    if (cell.x > maxX) maxX = cell.x;
-    if (cell.y < minY) minY = cell.y;
-    if (cell.y > maxY) maxY = cell.y;
+export function getDimention(chunkData) {
+  let maxX = -999;
+  let maxY = -999;
+  let minX = 999;
+  let minY = 999;
+  for(let cellData of chunkData) {
+    if(cellData.x < minX) minX = cellData.x;
+    if(cellData.y < minY) minY = cellData.y;
+    if(cellData.x > maxX) maxX = cellData.x;
+    if(cellData.x > maxY) maxY = cellData.y;
   }
 
-  return { height: maxY - minY + 1, width: maxX - minX + 1 };
+  console.log(maxX, maxY, minX, minX);
+
+  return {height : (maxY - minY), width : (maxX - minX)};
 }
