@@ -51,3 +51,9 @@ export function getDimention(chunkData) {
 
   return {height : (maxY - minY + 1), width : (maxX - minX + 1)};
 }
+
+export function clearContiner(container) {
+  for(let cell of container.children) {
+    if(cell) cell.classList.remove("active");
+  }
+}

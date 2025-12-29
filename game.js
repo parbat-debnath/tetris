@@ -2,7 +2,7 @@ import * as logic from "./modules/logic.js";
 import * as utility from "./modules/utility.js";
 
 const gameArea = document.querySelector("#gamearea");
-gameArea.dataset.height = 24
+gameArea.dataset.height = 24;
 
 const square_chunk = [
   { x: 0, y: 0 },
@@ -42,12 +42,21 @@ chunks.push(reverseZ_chunk);
 chunks.push(l_chunk);
 chunks.push(t_chunk);
 
-let speed = 1000;
+let speed = 100;
 let isGameOver = false;
 
 function gameStart() {
   utility.loadGrid(24, 12, gameArea);
   dropRandomChunkLoop(chunks);
+}
+
+function gameOver() {
+  alert("Game Over");
+  setTimeout(() => {
+    utility.clearContiner(gameArea);
+  }, 3000);
+
+  return;
 }
 
 function dropRandomChunk(chunks) {
@@ -58,12 +67,13 @@ function dropRandomChunk(chunks) {
 }
 
 function dropRandomChunkLoop(chunks) {
-  dropRandomChunk(chunks).then(
-    () => {
+  dropRandomChunk(chunks)
+    .then(() => {
       dropRandomChunkLoop(chunks);
-    },
-    () => {}
-  );
+    })
+    .catch(() => {
+      gameOver();
+    });
 }
 
 gameStart();
