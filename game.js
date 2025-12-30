@@ -23,7 +23,7 @@ const square_chunk = [
   { x: 1, y: 0 },
   { x: 1, y: 1 },
 ];
-const z_chunk = [
+const Z_chunk = [
   { x: 0, y: 0 },
   { x: 1, y: 0 },
   { x: 1, y: 1 },
@@ -35,25 +35,39 @@ const reverseZ_chunk = [
   { x: 1, y: 0 },
   { x: 2, y: 0 },
 ];
-const l_chunk = [
+const I_chunk = [
   { x: 0, y: 0 },
   { x: 0, y: 1 },
   { x: 0, y: 2 },
   { x: 0, y: 3 },
 ];
-const t_chunk = [
+const T_chunk = [
   { x: 0, y: 0 },
   { x: 1, y: 0 },
   { x: 1, y: 1 },
   { x: 2, y: 0 },
 ];
+const L_chunk = [
+  { x: 0, y: 0 },
+  { x: 0, y: 1 },
+  { x: 0, y: 2 },
+  { x: 2, y: 2 },
+];
+const reverseL_chunk = [
+  { x: 1, y: 0 },
+  { x: 1, y: 1 },
+  { x: 1, y: 2 },
+  { x: 2, y: 2 },
+];
 
 export const chunks = [];
 chunks.push(square_chunk);
-chunks.push(z_chunk);
+chunks.push(Z_chunk);
 chunks.push(reverseZ_chunk);
-chunks.push(l_chunk);
-chunks.push(t_chunk);
+chunks.push(I_chunk);
+chunks.push(T_chunk);
+chunks.push(L_chunk);
+chunks.push(reverseL_chunk);
 
 let speed = 600;
 export let currenTaskId;
