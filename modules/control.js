@@ -13,23 +13,23 @@ control.addEventListener("keydown", (event) => {
   control.value = "";
   if (event.key === "ArrowLeft") {
     console.log("Attempt to move left");
-    moveLeft();
+    main.moveLeft();
   } else if (event.key === "ArrowDown") {
     console.log("Attempt to move down");
-    moveDown();
+    main.moveDown();
   } else if (event.key === "ArrowRight") {
     console.log("Attempt to move right");
-    moveRight();
+    main.moveRight();
   } else if (event.key === "ArrowUp") {
     console.log("Attempt to move bottom");
-    moveBottom();
+    main.moveBottom();
   } else if (event.key === " " && !main.gamePaused) {
     console.log("Attempt to pause");
     main.toggleGamePlayPause();
     main.pause();
   } else if (event.key === " " && main.gamePaused) {
     console.log("Attempt to resume");
-    resume();
+    main.resume();
   } else if (event.key === "r" || event.key === "R") {
     console.log("Attempt to rotate");
     rotateChunk();

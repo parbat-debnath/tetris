@@ -3,12 +3,18 @@ import * as utility from "./modules/utility.js";
 
 export const gameArea = document.querySelector("#gamearea");
 gameArea.dataset.height = 24;
+gameArea.dataset.width = 12;
 
 export let gamePaused;
+export let currentChunkData;
 
 export function toggleGamePlayPause() {
-  if(gamePaused) gamePaused = false;
+  if (gamePaused) gamePaused = false;
   else gamePaused = true;
+}
+
+export function setCurrentChunkData(chunkData) {
+  currentChunkData = structuredClone(chunkData);
 }
 
 const square_chunk = [
@@ -42,14 +48,14 @@ const t_chunk = [
   { x: 2, y: 0 },
 ];
 
-const chunks = [];
+export const chunks = [];
 chunks.push(square_chunk);
 chunks.push(z_chunk);
 chunks.push(reverseZ_chunk);
 chunks.push(l_chunk);
 chunks.push(t_chunk);
 
-let speed = 100;
+let speed = 600;
 export let currenTaskId;
 
 export function setTaskId(id) {
@@ -62,13 +68,25 @@ function gameStart() {
   dropRandomChunkLoop(chunks);
 }
 
-export function play() {}
+export function resume() {
+  gamePaused = false;
+  let promise = logic.freeFallChunk(currentChunkData, gameArea, speed);
+  promise
+    .then(() => {
+      dropRandomChunkLoop(chunks);
+    })
+    .catch(() => {
+      gameOver();
+    });
+}
 
 export function pause() {
   clearInterval(currenTaskId);
+  gamePaused = true;
 }
 
 export function reset(taskId) {
+  gamePaused = false;
   clearInterval(currenTaskId);
   utility.clearContiner(gameArea);
   dropRandomChunkLoop(chunks);
@@ -82,9 +100,41 @@ function gameOver() {
 
 function dropRandomChunk(chunks) {
   let chunk = chunks[Math.floor(Math.random() * chunks.length)];
-  let promise = logic.freeFallChunk(chunk, gameArea, speed); // -----> passing chunk data
+
+  currentChunkData = structuredClone(chunk);
+
+  let containerWidth = +gameArea.dataset.width || 12;
+  let chunkWidth = utility.getDimention(currentChunkData).width;
+  let startingPoint = Math.floor(
+    Math.random() * (containerWidth - chunkWidth + 1)
+  );
+
+  setStartingPoint(currentChunkData, startingPoint); // -----> setting chunk at a random position
+  chunkOffsetY(currentChunkData); // -----> offsetting chunk according to chunk height
+  chunkOffsetX(currentChunkData); // -----> offsetting x by one
+
+  let promise = logic.freeFallChunk(currentChunkData, gameArea, speed); // -----> passing chunk data
 
   return promise;
+}
+
+function setStartingPoint(chunkData, startingPoint) {
+  for (let cellData of chunkData) {
+    cellData.x += startingPoint;
+  }
+}
+
+function chunkOffsetY(chunkData) {
+  let chunkHeight = utility.getDimention(chunkData).height;
+  for (let cellData of chunkData) {
+    cellData.y -= chunkHeight + 1;
+  }
+}
+
+function chunkOffsetX(chunkData) {
+  for (let cellData of chunkData) {
+    cellData.x++;
+  }
 }
 
 function dropRandomChunkLoop(chunks) {
@@ -95,6 +145,96 @@ function dropRandomChunkLoop(chunks) {
     .catch(() => {
       gameOver();
     });
+}
+
+export function moveRight() {
+  if (logic.canMoveRight(currentChunkData, gameArea)) {
+    for (let cellData of currentChunkData) {
+      let cell = utility.getCellFromData(cellData.x, cellData.y, gameArea);
+      cell.classList.remove("active"); // removing "active" from current chunk
+    }
+
+    for (let cellData of currentChunkData) {
+      // updating position position
+      cellData.x++;
+    }
+
+    setCurrentChunkData(currentChunkData);
+
+    for (let cellData of currentChunkData) {
+      let cell = utility.getCellFromData(cellData.x, cellData.y, gameArea);
+      cell.classList.add("active"); // adding "active" from current chunk
+    }
+  } else {
+    console.log("cannot move right");
+  }
+}
+
+export function moveLeft() {
+  if (logic.canMoveLeft(currentChunkData, gameArea)) {
+    for (let cellData of currentChunkData) {
+      let cell = utility.getCellFromData(cellData.x, cellData.y, gameArea);
+      cell.classList.remove("active"); // removing "active" from current chunk
+    }
+
+    for (let cellData of currentChunkData) {
+      // updating position position
+      cellData.x--;
+    }
+
+    setCurrentChunkData(currentChunkData);
+
+    for (let cellData of currentChunkData) {
+      let cell = utility.getCellFromData(cellData.x, cellData.y, gameArea);
+      cell.classList.add("active"); // adding "active" from current chunk
+    }
+  } else {
+    console.log("cannot move left");
+  }
+}
+
+export function moveDown() {
+  if (logic.canMoveDown(currentChunkData, gameArea)) {
+    for (let cellData of currentChunkData) {
+      let cell = utility.getCellFromData(cellData.x, cellData.y, gameArea);
+      cell.classList.remove("active"); // removing "active" from current chunk
+    }
+
+    for (let cellData of currentChunkData) {
+      // updating position position
+      cellData.y++;
+    }
+
+    setCurrentChunkData(currentChunkData);
+
+    for (let cellData of currentChunkData) {
+      let cell = utility.getCellFromData(cellData.x, cellData.y, gameArea);
+      cell.classList.add("active"); // adding "active" from current chunk
+    }
+  } else {
+    console.log("cannot move down");
+  }
+}
+
+export function moveBottom() {
+  while (logic.canMoveDown(currentChunkData, gameArea)) {
+    for (let cellData of currentChunkData) {
+      let cell = utility.getCellFromData(cellData.x, cellData.y, gameArea);
+      cell.classList.remove("active"); // removing "active" from current chunk
+    }
+
+    for (let cellData of currentChunkData) {
+      // updating position position
+      cellData.y++;
+    }
+
+    setCurrentChunkData(currentChunkData);
+
+    for (let cellData of currentChunkData) {
+      let cell = utility.getCellFromData(cellData.x, cellData.y, gameArea);
+      cell.classList.add("active"); // adding "active" from current chunk
+    }
+  }
 }
 
 gameStart();

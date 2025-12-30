@@ -34,7 +34,7 @@ body {
     transition: 0.1s;
 }
 
-.active {
+.active, .fixed {
     background-color: rgb(21, 39, 11);
     transform: scale(1);
     border-radius: 4px;

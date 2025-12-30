@@ -1,98 +1,116 @@
 import * as utility from "./utility.js";
-import { setTaskId } from "../game.js";
+import * as main from "../game.js";
 
-export function freeFallChunk(_chunkData, container, speed) {
-  let containerWidth = +container.dataset.width || 12;
-  let chunkWidth = utility.getDimention(_chunkData).width;
-  let currentY = 0;
-
-  let startingPoint = Math.floor(
-    Math.random() * (containerWidth - chunkWidth + 1)
-  );
-
+export function freeFallChunk(chunkData, container, speed) {
+  let currentY = utility.getHighestYCoord(chunkData);
   return new Promise(function (resolve, reject) {
-    let chunkData = structuredClone(_chunkData);
-    let chunkHeight = utility.getDimention(_chunkData).height;
-    let chunkWidth = utility.getDimention(_chunkData).width;
-    for (let cellData of chunkData) {
-      cellData.x += startingPoint;
-      cellData.y -= chunkHeight;
-      if(cellData.y > currentY) currentY = cellData.y;
-    }
+    let currentTaskId = setInterval(() => {
+      if (canMoveDown(main.currentChunkData, container)) {
+        // removing current "active" class from current active cells
+        for (let cellData of main.currentChunkData) {
+          let cell = utility.getCellFromData(cellData.x, cellData.y, container);
+          if (cell) {
+            cell.classList.remove("active");
+          }
+        }
 
-    const intarvalId = setInterval(() => {
-      setTaskId(intarvalId);
-      if (!canMoveDown(chunkData, container)) {
-        if (currentY < chunkHeight) {
-          clearInterval(intarvalId);
-          console.log("Top occupied : game over");
+        // changing chunkData's value to new position
+
+        for (let cellData of main.currentChunkData) {
+          cellData.y++;
+        }
+
+        
+        main.setCurrentChunkData(main.currentChunkData); // -----> updating current chunk data
+        currentY = utility.getHighestYCoord(main.currentChunkData);
+
+        // adding "active" class to new chunk positions
+
+        for (let cellData of main.currentChunkData) {
+          let cell = utility.getCellFromData(cellData.x, cellData.y, container);
+          cell.classList.add("active");
+        }
+
+        console.log(currentY)
+      } else {
+        // cannot move down : either chunk settled or game over
+
+        if (currentY < utility.getDimention(main.currentChunkData).height) {
+          // -----> game over
+          console.log("Game over : top reached");
+          clearInterval(currentTaskId);
           reject();
           return;
         } else {
-          clearInterval(intarvalId);
+          // -----> reached bottom : settled
+          utility.fixChunk(main.currentChunkData, container);
+          console.log("Settled");
+          clearInterval(currentTaskId);
           resolve();
           return;
         }
       }
-
-      for (let cellData of chunkData) {
-        let cell = utility.getCellFromData(
-          cellData.x + 1,
-          cellData.y + 1,
-          container
-        );
-        if (cell) cell.classList.remove("active");
-      }
-
-      for (let cellData of chunkData) {
-        if (cellData.y > currentY) currentY = cellData.y;
-        cellData.y++;
-        let cell = utility.getCellFromData(
-          cellData.x + 1,
-          cellData.y + 1,
-          container
-        );
-        if (cell) {
-          cell.classList.add("active");
-          if (cellData.y > currentY) {
-            // updating currentY
-            currentY = cellData.y;
-            
-          }
-        }
-      }
     }, speed);
+
+    main.setTaskId(currentTaskId);
   });
 }
 
-function canMoveDown(chunkData, container) {
-  // returns true if cell below is not active or cell itself is not defined else, returns false.
+export function canMoveDown(chunkData, container) {
   for (let cellData of chunkData) {
-    let nextCellData = { x: cellData.x, y: cellData.y + 1 };
     let nextCell = utility.getCellFromData(
-      cellData.x + 1,
-      cellData.y + 2,
+      cellData.x,
+      cellData.y + 1,
       container
     );
 
-    // checking for chunk occupency
+    // cheking if bottom reached
+    if (nextCell.dataset.y > +container.dataset.height) {
+      console.log("cannot move down : end reached");
+      return false;
+    } else if (utility.isFixed(nextCell)) {
+      console.log("cannot move down : bottom blocked");
+      return false;
+    }
+  }
 
-    if (nextCell) {
-      if (
-        utility.isOccupied(nextCell) &&
-        !utility.isInChunk(nextCellData, chunkData)
-      ) {
-        console.log("settled");
+  return true;
+}
+
+export function canMoveRight(chunkData, container) {
+  let rightMostCoord = utility.getHighestXCoord(chunkData);
+  // checking for border
+  if (rightMostCoord >= +container.dataset.width) {
+    return false;
+  }
+
+  for (let cellData of chunkData) {
+    if (cellData.x === rightMostCoord) {
+      let nextCell = utility.getCellFromData(cellData.x + 1, cellData.y, container);
+      // checking for fixed cells
+      if (utility.isFixed(nextCell)) {
         return false;
       }
     }
+  }
 
-    // checking for ground
+  return true;
+}
 
-    if (nextCellData.y >= +container.dataset.height) {
-      console.log("Ground reached.");
+export function canMoveLeft(chunkData, container) {
+  let leftMostCoord = utility.getLowestXCoord(chunkData);
+  // checking for border
+  if (leftMostCoord <= 1) {
+    return false;
+  }
 
-      return false;
+  for (let cellData of chunkData) {
+    if (cellData.x === leftMostCoord) {
+      let nextCell = utility.getCellFromData(cellData.x - 1, cellData.y, container);
+      // checking for fixed cells
+      if (utility.isFixed(nextCell)) {
+        return false;
+      }
     }
   }
 
