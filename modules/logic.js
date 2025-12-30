@@ -1,4 +1,6 @@
 import * as utility from "./utility.js";
+import { setTaskId } from "../game.js";
+
 export function freeFallChunk(_chunkData, container, speed) {
   let containerWidth = +container.dataset.width || 12;
   let chunkWidth = utility.getDimention(_chunkData).width;
@@ -18,7 +20,8 @@ export function freeFallChunk(_chunkData, container, speed) {
       if(cellData.y > currentY) currentY = cellData.y;
     }
 
-    let intarvalId = setInterval(() => {
+    const intarvalId = setInterval(() => {
+      setTaskId(intarvalId);
       if (!canMoveDown(chunkData, container)) {
         if (currentY < chunkHeight) {
           clearInterval(intarvalId);

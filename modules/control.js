@@ -1,3 +1,6 @@
+import * as main from'../game.js'
+import * as utility from './utility.js'
+
 const control = document.querySelector("#control");
 control.focus();
 control.value = "";
@@ -20,10 +23,11 @@ control.addEventListener("keydown", (event) => {
   } else if (event.key === "ArrowUp") {
     console.log("Attempt to move bottom");
     moveBottom();
-  } else if (event.key === " " && !gamePaused) {
+  } else if (event.key === " " && !main.gamePaused) {
     console.log("Attempt to pause");
-    pause();
-  } else if (event.key === " " && gamePaused) {
+    main.toggleGamePlayPause();
+    main.pause();
+  } else if (event.key === " " && main.gamePaused) {
     console.log("Attempt to resume");
     resume();
   } else if (event.key === "r" || event.key === "R") {
@@ -31,6 +35,7 @@ control.addEventListener("keydown", (event) => {
     rotateChunk();
   } else if (event.key === "Enter") {
     console.log("Attempt to reset");
-    reset();
+    utility.clearContiner(main.gameArea);
+    main.reset();
   }
 });

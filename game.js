@@ -1,8 +1,15 @@
 import * as logic from "./modules/logic.js";
 import * as utility from "./modules/utility.js";
 
-const gameArea = document.querySelector("#gamearea");
+export const gameArea = document.querySelector("#gamearea");
 gameArea.dataset.height = 24;
+
+export let gamePaused;
+
+export function toggleGamePlayPause() {
+  if(gamePaused) gamePaused = false;
+  else gamePaused = true;
+}
 
 const square_chunk = [
   { x: 0, y: 0 },
@@ -43,19 +50,33 @@ chunks.push(l_chunk);
 chunks.push(t_chunk);
 
 let speed = 100;
-let isGameOver = false;
+export let currenTaskId;
+
+export function setTaskId(id) {
+  currenTaskId = id;
+}
 
 function gameStart() {
+  gamePaused = false;
   utility.loadGrid(24, 12, gameArea);
+  dropRandomChunkLoop(chunks);
+}
+
+export function play() {}
+
+export function pause() {
+  clearInterval(currenTaskId);
+}
+
+export function reset(taskId) {
+  clearInterval(currenTaskId);
+  utility.clearContiner(gameArea);
   dropRandomChunkLoop(chunks);
 }
 
 function gameOver() {
   alert("Game Over");
-  setTimeout(() => {
-    utility.clearContiner(gameArea);
-  }, 3000);
-
+  utility.clearContiner(gameArea);
   return;
 }
 

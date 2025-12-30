@@ -13,26 +13,27 @@ export function loadGrid(height = 24, width = 12, container) {
 
 export function getCellFromData(x, y, container) {
   let cell = container.children[(y - 1) * 12 + (x - 1)];
-  if(!cell) {
+  if (!cell) {
     cell = document.createElement("div");
     cell.dataset.x = x;
     cell.dataset.y = y;
   }
 
-  return cell
+  return cell;
 }
 
 export function isInChunk(targetCellData, chunkData) {
-  for(let cellData of chunkData) {
-    if(cellData.x === targetCellData.x && cellData.y === targetCellData.y) {
-      return true;}
+  for (let cellData of chunkData) {
+    if (cellData.x === targetCellData.x && cellData.y === targetCellData.y) {
+      return true;
+    }
   }
-  
+
   return false;
 }
 
 export function isOccupied(cell) {
-  if(cell.classList.contains("active")) {
+  if (cell.classList.contains("active")) {
     return true;
   } else return false;
 }
@@ -42,14 +43,14 @@ export function getDimention(chunkData) {
   let maxY = -999;
   let minX = 999;
   let minY = 999;
-  for(let cellData of chunkData) {
-    if(cellData.x < minX) minX = cellData.x;
-    if(cellData.y < minY) minY = cellData.y;
-    if(cellData.x > maxX) maxX = cellData.x;
-    if(cellData.x > maxY) maxY = cellData.y;
+  for (let cellData of chunkData) {
+    if (cellData.x < minX) minX = cellData.x;
+    if (cellData.y < minY) minY = cellData.y;
+    if (cellData.x > maxX) maxX = cellData.x;
+    if (cellData.x > maxY) maxY = cellData.y;
   }
 
-  return {height : (maxY - minY + 1), width : (maxX - minX + 1)};
+  return { height: maxY - minY + 1, width: maxX - minX + 1 };
 }
 
 export function clearContiner(container) {
