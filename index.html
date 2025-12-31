@@ -1,21 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <link href="https://fonts.cdnfonts.com/css/ds-digital" rel="stylesheet">
     <title>Tetris</title>
-</head>
-<body>
+  </head>
+  <body>
+    <div id="scoreboard">
+      <p class="score-heading">Score</p>
+      <p id="score">0</p>
+    </div>
     <div class="container">
-        <div id="gamearea"></div>
+      <div id="gamearea"></div>
     </div>
 
-    <input type="text" id="control">
+    <input type="text" id="control" />
 
     <script type="module" src="game.js"></script>
     <script type="module" src="modules/logic.js"></script>
     <script type="module" src="modules/utility.js"></script>
     <script type="module" src="modules/control.js"></script>
-</body>
+  </body>
 </html>

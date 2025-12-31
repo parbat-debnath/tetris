@@ -7,7 +7,9 @@ gameArea.dataset.width = 12;
 
 export let gamePaused;
 export let currentChunkData;
+const scoreBoard = document.querySelector("#score");
 let score = 0;
+scoreBoard.textContent = score;
 
 export function toggleGamePlayPause() {
   if (gamePaused) gamePaused = false;
@@ -103,6 +105,7 @@ export function pause() {
 export function restart() {
   gamePaused = false;
   score = 0;
+  updateScore();
   clearInterval(currenTaskId);
   utility.clearContiner(gameArea);
   console.clear();
@@ -370,6 +373,7 @@ export function updateScore() {
   let completedLayers = getCompletedLayers();
   for(let layers of completedLayers) {
     score++;
+    scoreBoard.textContent = score;
     console.log(score);
   }
 }
