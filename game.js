@@ -99,10 +99,11 @@ export function pause() {
   gamePaused = true;
 }
 
-export function reset(taskId) {
+export function restart(taskId) {
   gamePaused = false;
   clearInterval(currenTaskId);
   utility.clearContiner(gameArea);
+  console.clear();
   dropRandomChunkLoop(chunks);
 }
 
@@ -252,47 +253,90 @@ export function moveBottom() {
 }
 
 export function rotate() {
-  if(gamePaused) return;
-  let chunkData = structuredClone(currentChunkData);
-  let chunkWidth = utility.getDimention(chunkData).width;
-  let chunkHeight = utility.getDimention(chunkData).height;
+  if (!gamePaused) {
+    let chunkData = structuredClone(currentChunkData);
+    let centerX = utility.getCenterCellCoord(chunkData).x;
+    let centerY = utility.getCenterCellCoord(chunkData).y;
 
-  let chunkCenterX = utility.getCenterCellCoord(chunkData).x;
-  let chunkCenterY = utility.getCenterCellCoord(chunkData).y;
+    for (let cellData of chunkData) {
+      // rotating
+      let relX = cellData.x - centerX;
+      let relY = cellData.y - centerY;
 
-  for (let cellData of chunkData) {
-    // matrix multiplication with 2D rotation matrix [{0 -1}, {1 0}] (coords are measured w.r.t centerX and centerY)
-    let newX =
-      (cellData.x - chunkCenterX) * 0 + (cellData.y - chunkCenterY) * 1;
-    let newY =
-      (cellData.x - chunkCenterX) * -1 + (cellData.y - chunkCenterY) * 0 + 1;
+      let newX = -relY;
+      let newY = relX;
 
-    cellData.x = newX;
-    cellData.y = newY;
-  }
+      cellData.x = newX + centerX;
+      cellData.y = newY + centerY;
+    }
 
-  // re-referencing with origin center
-  for (let cellData of chunkData) {
-    cellData.x += chunkCenterX;
-    cellData.y += chunkCenterY;
-  }
+    let offSetX = utility.getCenterCellCoord(chunkData).x - centerX;
+    let offSetY = utility.getCenterCellCoord(chunkData).y - centerY;
 
-  if (logic.canRotate(chunkData, gameArea)) {
-    for (let cellData of currentChunkData) {
+    for (let cellData of chunkData) {
+      cellData.x -= offSetX;
+      cellData.y -= offSetY;
+    }
+
+    if (logic.canRotate(chunkData, gameArea)) {
       // removing 'active' class from current cells
-      let cell = utility.getCellFromData(cellData.x, cellData.y, gameArea);
-      cell.classList.remove("active");
-    }
+      for (let cellData of currentChunkData) {
+        let cell = utility.getCellFromData(cellData.x, cellData.y, gameArea);
+        cell.classList.remove("active");
+      }
 
-    setCurrentChunkData(chunkData); // updating current chunk data
+      // updating current cells
+      setCurrentChunkData(chunkData);
 
-    for (let cellData of currentChunkData) {
       // adding 'active' class to current cells
-      let cell = utility.getCellFromData(cellData.x, cellData.y, gameArea);
-      cell.classList.add("active");
+      for (let cellData of chunkData) {
+        let cell = utility.getCellFromData(cellData.x, cellData.y, gameArea);
+        cell.classList.add("active");
+      }
+
+      return;
     }
-  } else {
-    return;
+
+    if (
+      utility.getLowestXCoord(chunkData) < 1 ||
+      utility.getHighestXCoord(chunkData) > +gameArea.dataset.width
+    ) {
+      console.log("this called");
+
+      let maxOffHorizontalBoundery = 0;
+      if (utility.getLowestXCoord(chunkData) < 1) {   // left boundery
+        maxOffHorizontalBoundery = utility.getLowestXCoord(chunkData);
+
+        for (let cellData of chunkData) {
+          cellData.x -= maxOffHorizontalBoundery - 1;
+        }
+      } else {    // right boundery
+        maxOffHorizontalBoundery =
+          utility.getHighestXCoord(chunkData) - +gameArea.dataset.width;
+        for (let cellData of chunkData) {
+          cellData.x -= maxOffHorizontalBoundery;
+        }
+      }
+
+      // removing 'active' class from current cells
+      for (let cellData of currentChunkData) {
+        let cell = utility.getCellFromData(cellData.x, cellData.y, gameArea);
+        cell.classList.remove("active");
+      }
+
+      // updating current cells
+      setCurrentChunkData(chunkData);
+
+      // adding 'active' class to current cells
+      for (let cellData of currentChunkData) {
+        let cell = utility.getCellFromData(cellData.x, cellData.y, gameArea);
+        cell.classList.add("active");
+      }
+
+      return;
+    } else {
+      return;
+    }
   }
 }
 

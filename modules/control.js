@@ -36,6 +36,6 @@ control.addEventListener("keydown", (event) => {
   } else if (event.key === "Enter") {
     console.log("Attempt to reset");
     utility.clearContiner(main.gameArea);
-    main.reset();
+    main.restart();
   }
 });

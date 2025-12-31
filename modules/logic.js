@@ -118,9 +118,15 @@ export function canMoveLeft(chunkData, container) {
 }
 
 export function canRotate(chunkData, container) {
-  for(let cellData of chunkData) {
+  for(let cellData of chunkData) {    // checking for fixed cells
     let cell = utility.getCellFromData(cellData.x, cellData.y, container);
     if(utility.isFixed(cell)) {
+      return false;
+    }
+  }
+
+  for(let cellData of chunkData) {    // checking for boundery condition
+    if(cellData.x > +container.dataset.width || cellData.x < 1 || cellData.y > +container.dataset.height) {
       return false;
     }
   }

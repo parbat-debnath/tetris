@@ -120,3 +120,11 @@ export function getCenterCellCoord(chunkData) {
   
   return {x : centerX, y : centerY};
 }
+
+export function atLeftCorner(chunkData) {
+  for(let cellData of chunkData) {
+    if(cellData.x === 1) return true;
+  }
+
+  return false;
+}

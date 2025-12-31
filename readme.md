@@ -6,4 +6,4 @@ Controls :
     down arrow          -> moves chunk to bottom
     r/R                 -> rotate
     spacebar            -> pause / resume
-    enter               -> reset
+    enter               -> resart
