@@ -83,7 +83,7 @@ export function getHighestXCoord(chunkData) {
 export function getLowestXCoord(chunkData) {
   let minX = 999;
   for (let cellData of chunkData) {
-    if (cellData.y < minX) minX = cellData.x;
+    if (cellData.x < minX) minX = cellData.x;
   }
 
   return minX;
@@ -105,4 +105,18 @@ export function getLowestYCoord(chunkData) {
   }
 
   return minY;
+}
+
+export function getCenterCellCoord(chunkData) {
+  let leftMostCoord = getLowestXCoord(chunkData);
+  let topMostCoord = getLowestYCoord(chunkData);
+  let chunkHeight = getDimention(chunkData).height;
+  let chunkWidth = getDimention(chunkData).width;
+
+  let centerX = leftMostCoord + Math.ceil(chunkWidth / 2) - 1;
+  let centerY = topMostCoord + Math.ceil(chunkHeight / 2) - 1;
+
+  console.log("Current chunk center : ", centerX, centerY);
+  
+  return {x : centerX, y : centerY};
 }

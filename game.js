@@ -162,7 +162,7 @@ function dropRandomChunkLoop(chunks) {
 }
 
 export function moveRight() {
-  if (logic.canMoveRight(currentChunkData, gameArea)) {
+  if (logic.canMoveRight(currentChunkData, gameArea) && !gamePaused) {
     for (let cellData of currentChunkData) {
       let cell = utility.getCellFromData(cellData.x, cellData.y, gameArea);
       cell.classList.remove("active"); // removing "active" from current chunk
@@ -185,7 +185,7 @@ export function moveRight() {
 }
 
 export function moveLeft() {
-  if (logic.canMoveLeft(currentChunkData, gameArea)) {
+  if (logic.canMoveLeft(currentChunkData, gameArea) && !gamePaused) {
     for (let cellData of currentChunkData) {
       let cell = utility.getCellFromData(cellData.x, cellData.y, gameArea);
       cell.classList.remove("active"); // removing "active" from current chunk
@@ -208,7 +208,7 @@ export function moveLeft() {
 }
 
 export function moveDown() {
-  if (logic.canMoveDown(currentChunkData, gameArea)) {
+  if (logic.canMoveDown(currentChunkData, gameArea) && !gamePaused) {
     for (let cellData of currentChunkData) {
       let cell = utility.getCellFromData(cellData.x, cellData.y, gameArea);
       cell.classList.remove("active"); // removing "active" from current chunk
@@ -231,7 +231,7 @@ export function moveDown() {
 }
 
 export function moveBottom() {
-  while (logic.canMoveDown(currentChunkData, gameArea)) {
+  while (logic.canMoveDown(currentChunkData, gameArea) && !gamePaused) {
     for (let cellData of currentChunkData) {
       let cell = utility.getCellFromData(cellData.x, cellData.y, gameArea);
       cell.classList.remove("active"); // removing "active" from current chunk
@@ -248,6 +248,51 @@ export function moveBottom() {
       let cell = utility.getCellFromData(cellData.x, cellData.y, gameArea);
       cell.classList.add("active"); // adding "active" from current chunk
     }
+  }
+}
+
+export function rotate() {
+  if(gamePaused) return;
+  let chunkData = structuredClone(currentChunkData);
+  let chunkWidth = utility.getDimention(chunkData).width;
+  let chunkHeight = utility.getDimention(chunkData).height;
+
+  let chunkCenterX = utility.getCenterCellCoord(chunkData).x;
+  let chunkCenterY = utility.getCenterCellCoord(chunkData).y;
+
+  for (let cellData of chunkData) {
+    // matrix multiplication with 2D rotation matrix [{0 -1}, {1 0}] (coords are measured w.r.t centerX and centerY)
+    let newX =
+      (cellData.x - chunkCenterX) * 0 + (cellData.y - chunkCenterY) * 1;
+    let newY =
+      (cellData.x - chunkCenterX) * -1 + (cellData.y - chunkCenterY) * 0 + 1;
+
+    cellData.x = newX;
+    cellData.y = newY;
+  }
+
+  // re-referencing with origin center
+  for (let cellData of chunkData) {
+    cellData.x += chunkCenterX;
+    cellData.y += chunkCenterY;
+  }
+
+  if (logic.canRotate(chunkData, gameArea)) {
+    for (let cellData of currentChunkData) {
+      // removing 'active' class from current cells
+      let cell = utility.getCellFromData(cellData.x, cellData.y, gameArea);
+      cell.classList.remove("active");
+    }
+
+    setCurrentChunkData(chunkData); // updating current chunk data
+
+    for (let cellData of currentChunkData) {
+      // adding 'active' class to current cells
+      let cell = utility.getCellFromData(cellData.x, cellData.y, gameArea);
+      cell.classList.add("active");
+    }
+  } else {
+    return;
   }
 }
 

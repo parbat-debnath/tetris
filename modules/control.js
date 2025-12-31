@@ -32,7 +32,7 @@ control.addEventListener("keydown", (event) => {
     main.resume();
   } else if (event.key === "r" || event.key === "R") {
     console.log("Attempt to rotate");
-    rotateChunk();
+    main.rotate();
   } else if (event.key === "Enter") {
     console.log("Attempt to reset");
     utility.clearContiner(main.gameArea);

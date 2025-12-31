@@ -116,3 +116,14 @@ export function canMoveLeft(chunkData, container) {
 
   return true;
 }
+
+export function canRotate(chunkData, container) {
+  for(let cellData of chunkData) {
+    let cell = utility.getCellFromData(cellData.x, cellData.y, container);
+    if(utility.isFixed(cell)) {
+      return false;
+    }
+  }
+
+  return true;
+}
