@@ -42,7 +42,10 @@ export function freeFallChunk(chunkData, container, speed) {
         } else {
           // -----> reached bottom : settled
           utility.fixChunk(main.currentChunkData, container);
-          main.updateScore();
+          let completedLayers = main.getCompletedLayers();
+          for(let layer of completedLayers) {
+            main.updateScore();
+          }
           main.clearLayers(main.getCompletedLayers());
           utility.resetToBottom(container);
           clearInterval(currentTaskId);

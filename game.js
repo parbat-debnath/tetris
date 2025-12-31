@@ -105,7 +105,7 @@ export function pause() {
 export function restart() {
   gamePaused = false;
   score = 0;
-  updateScore();
+  updateScore(score);
   clearInterval(currenTaskId);
   utility.clearContiner(gameArea);
   console.clear();
@@ -113,7 +113,8 @@ export function restart() {
 }
 
 function gameOver() {
-  alert("Game Over");
+  alert("Game Over : double press enter to restart");
+  updateScore(0);
   utility.clearContiner(gameArea);
   return;
 }
@@ -369,13 +370,9 @@ export function clearLayers(levelsToBeCleared = []) {
   }
 }
 
-export function updateScore() {
-  let completedLayers = getCompletedLayers();
-  for(let layers of completedLayers) {
-    score++;
-    scoreBoard.textContent = score;
-    console.log(score);
-  }
+export function updateScore(newScore = score + 1) {
+  score = newScore;
+  scoreBoard.textContent = score;
 }
 
 gameStart();
