@@ -7,6 +7,7 @@ gameArea.dataset.width = 12;
 
 export let gamePaused;
 export let currentChunkData;
+let score = 0;
 
 export function toggleGamePlayPause() {
   if (gamePaused) gamePaused = false;
@@ -99,8 +100,9 @@ export function pause() {
   gamePaused = true;
 }
 
-export function restart(taskId) {
+export function restart() {
   gamePaused = false;
+  score = 0;
   clearInterval(currenTaskId);
   utility.clearContiner(gameArea);
   console.clear();
@@ -181,7 +183,7 @@ export function moveRight() {
       cell.classList.add("active"); // adding "active" from current chunk
     }
   } else {
-    console.log("cannot move right");
+    return;
   }
 }
 
@@ -204,7 +206,7 @@ export function moveLeft() {
       cell.classList.add("active"); // adding "active" from current chunk
     }
   } else {
-    console.log("cannot move left");
+    return;
   }
 }
 
@@ -227,7 +229,7 @@ export function moveDown() {
       cell.classList.add("active"); // adding "active" from current chunk
     }
   } else {
-    console.log("cannot move down");
+    return;
   }
 }
 
@@ -301,7 +303,6 @@ export function rotate() {
       utility.getLowestXCoord(chunkData) < 1 ||
       utility.getHighestXCoord(chunkData) > +gameArea.dataset.width
     ) {
-      console.log("this called");
 
       let maxOffHorizontalBoundery = 0;
       if (utility.getLowestXCoord(chunkData) < 1) {   // left boundery
@@ -337,6 +338,39 @@ export function rotate() {
     } else {
       return;
     }
+  }
+}
+
+export function getCompletedLayers() {
+  let clearedLevels = [];
+  let i , j;
+  for(j = +gameArea.dataset.height; j > 0; j--) {
+    for(i = +gameArea.dataset.width; i > 0; i--) {
+      let cell = utility.getCellFromData(i, j, gameArea);
+      if(!cell.classList.contains("fixed")) {
+        break;
+      }
+    }
+    if(i === 0) clearedLevels.push(j);
+  }
+
+  return clearedLevels;
+}
+
+export function clearLayers(levelsToBeCleared = []) {
+  for(let level of levelsToBeCleared) {
+    for(let i = +gameArea.dataset.width; i > 0; i--) {
+      let cell = utility.getCellFromData(i, level, gameArea);
+      cell.classList.remove("fixed");
+    }
+  }
+}
+
+export function updateScore() {
+  let completedLayers = getCompletedLayers();
+  for(let layers of completedLayers) {
+    score++;
+    console.log(score);
   }
 }
 

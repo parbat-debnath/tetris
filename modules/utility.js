@@ -115,8 +115,6 @@ export function getCenterCellCoord(chunkData) {
 
   let centerX = leftMostCoord + Math.ceil(chunkWidth / 2) - 1;
   let centerY = topMostCoord + Math.ceil(chunkHeight / 2) - 1;
-
-  console.log("Current chunk center : ", centerX, centerY);
   
   return {x : centerX, y : centerY};
 }
@@ -127,4 +125,42 @@ export function atLeftCorner(chunkData) {
   }
 
   return false;
+}
+
+function isLayerEmpty(layer, container) {
+  for(let i = +container.dataset.width; i > 0; i--) {
+    let cell = getCellFromData(i, layer, container);
+    if(cell.classList.contains("fixed")){
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function getEmptyLayers(container) {
+  let emptyLayers = [];
+  for(let layer = +container.dataset.height; layer > 0; layer--) {
+    if(isLayerEmpty(layer, container)) emptyLayers.push(layer);
+  }
+
+  return emptyLayers;
+}
+
+export function resetToBottom(container) {
+  let emptyLayers = getEmptyLayers(container);
+  let needToRecurtion = false;
+  for(let layer of emptyLayers) {
+    for(let i = +container.dataset.width; i > 0; i--) {
+      let cellOfPrevLayer = getCellFromData(i, layer - 1, container);
+      if(cellOfPrevLayer.classList.contains("fixed")) {
+        needToRecurtion = true;
+        let cellOfLayer = getCellFromData(i, layer, container);
+        cellOfLayer.classList.add("fixed");
+        cellOfPrevLayer.classList.remove("fixed");
+      }
+    }
+  }
+
+  if(needToRecurtion) resetToBottom(container);
 }

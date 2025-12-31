@@ -30,8 +30,6 @@ export function freeFallChunk(chunkData, container, speed) {
           let cell = utility.getCellFromData(cellData.x, cellData.y, container);
           cell.classList.add("active");
         }
-
-        console.log(currentY)
       } else {
         // cannot move down : either chunk settled or game over
 
@@ -44,7 +42,9 @@ export function freeFallChunk(chunkData, container, speed) {
         } else {
           // -----> reached bottom : settled
           utility.fixChunk(main.currentChunkData, container);
-          console.log("Settled");
+          main.updateScore();
+          main.clearLayers(main.getCompletedLayers());
+          utility.resetToBottom(container);
           clearInterval(currentTaskId);
           resolve();
           return;
@@ -66,10 +66,8 @@ export function canMoveDown(chunkData, container) {
 
     // cheking if bottom reached
     if (nextCell.dataset.y > +container.dataset.height) {
-      console.log("cannot move down : end reached");
       return false;
     } else if (utility.isFixed(nextCell)) {
-      console.log("cannot move down : bottom blocked");
       return false;
     }
   }
