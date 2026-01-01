@@ -7,6 +7,8 @@ if (sound.audioCtx.state === "suspended") {
   sound.audioCtx.resume();
 }
 
+document.body.style.cursor = "default";
+
 export const gameArea = document.querySelector("#gamearea");
 gameArea.dataset.height = 24;
 gameArea.dataset.width = 12;
@@ -24,8 +26,12 @@ scoreBoardHolder.style.display = "none";
 export let gameStarted = false
 
 export function toggleGamePlayPause() {
-  if (gamePaused) gamePaused = false;
-  else gamePaused = true;
+  if (gamePaused) {gamePaused = false;
+    document.body.style.cursor = "none";
+  }
+  else {gamePaused = true;
+    document.body.style.cursor = "default";
+  }
 }
 
 export function setCurrentChunkData(chunkData) {
@@ -103,12 +109,14 @@ utility.loadGrid(24, 12, gameArea);
 
 function gameStart() {
   gamePaused = false;
-  sound.playSFX('gameStart')
+  sound.playSFX('gameStart');
+  document.body.style.cursor = "none";
   dropRandomChunkLoop(chunks);
 }
 
 export function resume() {
   gamePaused = false;
+  document.body.style.cursor = "none";
   let promise = logic.freeFallChunk(currentChunkData, gameArea, speed);
   promise
     .then(() => {
@@ -134,9 +142,11 @@ export function restart() {
   console.clear();
   dropRandomChunkLoop(chunks);
   sound.playSFX("gameStart");
+  document.body.style.cursor = "none";
 }
 
 function gameOver() {
+  document.body.style.cursor = "default";
   sound.playSFX("gameOver");
   gameStarted = false;
   utility.showGameOverPopup(popupContainer).then(() => {
