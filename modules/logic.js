@@ -49,6 +49,7 @@ export function freeFallChunk(chunkData, container, speed) {
           main.clearLayers(main.getCompletedLayers());
           utility.resetToBottom(container);
           clearInterval(currentTaskId);
+          main.increaseSpeedBy(1.0005);
           resolve();
           return;
         }

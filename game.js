@@ -78,6 +78,14 @@ chunks.push(L_chunk);
 chunks.push(reverseL_chunk);
 
 let speed = 600;
+export function setSpeed(newSpeed) {
+  speed = newSpeed;
+}
+
+export function increaseSpeedBy(devider) {
+  speed /= devider;
+}
+
 export let currenTaskId;
 
 export function setTaskId(id) {
