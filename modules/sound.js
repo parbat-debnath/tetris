@@ -9,12 +9,12 @@ async function loadSound(name, url) {
 }
 
 
-loadSound('gameOver', '../assets/sounds/game-over.mp3');
-loadSound('gameStart', '../assets/sounds/game-start.mp3');
-loadSound('lineCleared', '../assets/sounds/line-cleared.mp3');
-loadSound('move', '../assets/sounds/move.mp3');
-loadSound('teleportDown', '../assets/sounds/teleport-down.mp3');
-loadSound('victory', '../assets/sounds/victory.mp3');
+loadSound('gameOver', 'assets/sounds/game-over.mp3');
+loadSound('gameStart', 'assets/sounds/game-start.mp3');
+loadSound('lineCleared', 'assets/sounds/line-cleared.mp3');
+loadSound('move', 'assets/sounds/move.mp3');
+loadSound('teleportDown', 'assets/sounds/teleport-down.mp3');
+loadSound('victory', 'assets/sounds/victory.mp3');
 
 export function playSFX(name) {
     if(!soundLibrary[name]) {
