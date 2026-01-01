@@ -27,6 +27,7 @@ control.addEventListener("keydown", (event) => {
   } else if (event.key === "r" || event.key === "R") {
     main.rotate();
   } else if (event.key === "Enter") {
+    if(!main.gameStarted) return;
     utility.clearContiner(main.gameArea);
     main.restart();
   }

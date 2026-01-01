@@ -6,6 +6,7 @@
 }
 body {
     background-color: rgb(27, 56, 9);
+    font-family: "Silkscreen", sans-serif;
 }
 
 .container {
@@ -22,6 +23,7 @@ body {
     box-sizing: border-box;
     background-color: rgb(107 143 84);
     padding: 4px;
+    cursor: none;
 }
 
 .cell {
@@ -48,7 +50,7 @@ body {
     cursor: default;
 }
 
-#scoreboard {
+#scoreBoardHolder {
     position: absolute;
     top: 0px;
     right: 0px;
@@ -68,6 +70,63 @@ body {
 #score {
     font-size: 40px;
     text-align: center;
-    font-family: 'DS-Digital', sans-serif;
-    font-style: italic;
+    font-family: "Silkscreen", sans-serif;
+}
+
+/* tutorial */
+
+.tutorial-box {
+    position: fixed;
+    background-color: rgba(0, 0, 0, 0.5);
+    box-sizing: border-box;
+    width: 100%;
+    padding: 7vw;
+    display: flex;
+    flex-direction: column;
+    z-index: 5;
+    transform: translate(0, -50%);
+    top: 50%;
+    font-family: "Silkscreen", sans-serif;
+    color: white;
+}
+
+.tutorial-box .tutorial-heading {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 50px;
+}
+
+.tutorial-box .tutorial-element {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.tutorial-box .tutorial-element .tutorial-btn {
+    padding: 15px;
+    min-width: 20px;
+    text-align: center;
+    background-color: azure;
+    color: black;
+    border: 3px groove black;
+    margin-left: 30%;
+}
+.tutorial-box .tutorial-element .tutorial-message {
+    margin-right: 30%;
+}
+
+.game-start-btn {
+    margin-right: 40%;
+    margin-left: 40%;
+    padding: 15px;
+    font-family: "Silkscreen", sans-serif;
+    font-size: 25px;
+    border: 3px solid white;
+    background-color: transparent;
+    color: white;
+    transition: 0.3s;
+}
+.game-start-btn:hover {
+    color: black;
+    background-color: azure;
 }

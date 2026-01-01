@@ -1,6 +1,7 @@
 import * as logic from "./modules/logic.js";
 import * as utility from "./modules/utility.js";
 import * as sound from "./modules/sound.js";
+import * as tutorial from "./modules/tutorial.js";
 
 if (sound.audioCtx.state === "suspended") {
   sound.audioCtx.resume();
@@ -10,11 +11,17 @@ export const gameArea = document.querySelector("#gamearea");
 gameArea.dataset.height = 24;
 gameArea.dataset.width = 12;
 
+const popupContainer = document.querySelector("#popup-container");
+
 export let gamePaused;
 export let currentChunkData;
 const scoreBoard = document.querySelector("#score");
+const scoreBoardHolder = document.querySelector("#scoreBoardHolder")
 let score = 0;
 scoreBoard.textContent = score;
+scoreBoardHolder.style.display = "none";
+
+export let gameStarted = false
 
 export function toggleGamePlayPause() {
   if (gamePaused) gamePaused = false;
@@ -92,9 +99,10 @@ export function setTaskId(id) {
   currenTaskId = id;
 }
 
+utility.loadGrid(24, 12, gameArea);
+
 function gameStart() {
   gamePaused = false;
-  utility.loadGrid(24, 12, gameArea);
   dropRandomChunkLoop(chunks);
 }
 
@@ -127,7 +135,7 @@ export function restart() {
 }
 
 function gameOver() {
-  sound.playSFX('gameOver');
+  sound.playSFX("gameOver");
   alert("Game Over : double press enter to restart");
   updateScore(0);
   utility.clearContiner(gameArea);
@@ -404,4 +412,9 @@ export function updateScore(newScore = score + 1) {
   scoreBoard.textContent = score;
 }
 
-gameStart();
+tutorial.showPCTutorial(popupContainer)
+.then(() => {
+  scoreBoardHolder.style.display = "block";
+  gameStarted = true;
+  gameStart();
+});
