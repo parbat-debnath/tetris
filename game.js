@@ -103,6 +103,7 @@ utility.loadGrid(24, 12, gameArea);
 
 function gameStart() {
   gamePaused = false;
+  sound.playSFX('gameStart')
   dropRandomChunkLoop(chunks);
 }
 
@@ -126,6 +127,7 @@ export function pause() {
 export function restart() {
   gamePaused = false;
   score = 0;
+  speed = 600;
   updateScore(score);
   clearInterval(currenTaskId);
   utility.clearContiner(gameArea);
