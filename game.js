@@ -1,5 +1,10 @@
 import * as logic from "./modules/logic.js";
 import * as utility from "./modules/utility.js";
+import * as sound from "./modules/sound.js";
+
+if (sound.audioCtx.state === "suspended") {
+  sound.audioCtx.resume();
+}
 
 export const gameArea = document.querySelector("#gamearea");
 gameArea.dataset.height = 24;
@@ -110,9 +115,11 @@ export function restart() {
   utility.clearContiner(gameArea);
   console.clear();
   dropRandomChunkLoop(chunks);
+  sound.playSFX("gameStart");
 }
 
 function gameOver() {
+  sound.playSFX('gameOver');
   alert("Game Over : double press enter to restart");
   updateScore(0);
   utility.clearContiner(gameArea);
@@ -186,6 +193,7 @@ export function moveRight() {
       let cell = utility.getCellFromData(cellData.x, cellData.y, gameArea);
       cell.classList.add("active"); // adding "active" from current chunk
     }
+    sound.playSFX("move");
   } else {
     return;
   }
@@ -209,6 +217,7 @@ export function moveLeft() {
       let cell = utility.getCellFromData(cellData.x, cellData.y, gameArea);
       cell.classList.add("active"); // adding "active" from current chunk
     }
+    sound.playSFX("move");
   } else {
     return;
   }
@@ -232,13 +241,16 @@ export function moveDown() {
       let cell = utility.getCellFromData(cellData.x, cellData.y, gameArea);
       cell.classList.add("active"); // adding "active" from current chunk
     }
+    sound.playSFX("move");
   } else {
     return;
   }
 }
 
 export function moveBottom() {
+  let canPlaySound = false;
   while (logic.canMoveDown(currentChunkData, gameArea) && !gamePaused) {
+    canPlaySound = true;
     for (let cellData of currentChunkData) {
       let cell = utility.getCellFromData(cellData.x, cellData.y, gameArea);
       cell.classList.remove("active"); // removing "active" from current chunk
@@ -255,6 +267,9 @@ export function moveBottom() {
       let cell = utility.getCellFromData(cellData.x, cellData.y, gameArea);
       cell.classList.add("active"); // adding "active" from current chunk
     }
+  }
+  if (canPlaySound) {
+    sound.playSFX("teleportDown");
   }
 }
 
@@ -300,6 +315,8 @@ export function rotate() {
         cell.classList.add("active");
       }
 
+      sound.playSFX("teleportDown");
+
       return;
     }
 
@@ -307,15 +324,16 @@ export function rotate() {
       utility.getLowestXCoord(chunkData) < 1 ||
       utility.getHighestXCoord(chunkData) > +gameArea.dataset.width
     ) {
-
       let maxOffHorizontalBoundery = 0;
-      if (utility.getLowestXCoord(chunkData) < 1) {   // left boundery
+      if (utility.getLowestXCoord(chunkData) < 1) {
+        // left boundery
         maxOffHorizontalBoundery = utility.getLowestXCoord(chunkData);
 
         for (let cellData of chunkData) {
           cellData.x -= maxOffHorizontalBoundery - 1;
         }
-      } else {    // right boundery
+      } else {
+        // right boundery
         maxOffHorizontalBoundery =
           utility.getHighestXCoord(chunkData) - +gameArea.dataset.width;
         for (let cellData of chunkData) {
@@ -338,6 +356,8 @@ export function rotate() {
         cell.classList.add("active");
       }
 
+      sound.playSFX("teleportDown");
+
       return;
     } else {
       return;
@@ -347,25 +367,26 @@ export function rotate() {
 
 export function getCompletedLayers() {
   let clearedLevels = [];
-  let i , j;
-  for(j = +gameArea.dataset.height; j > 0; j--) {
-    for(i = +gameArea.dataset.width; i > 0; i--) {
+  let i, j;
+  for (j = +gameArea.dataset.height; j > 0; j--) {
+    for (i = +gameArea.dataset.width; i > 0; i--) {
       let cell = utility.getCellFromData(i, j, gameArea);
-      if(!cell.classList.contains("fixed")) {
+      if (!cell.classList.contains("fixed")) {
         break;
       }
     }
-    if(i === 0) clearedLevels.push(j);
+    if (i === 0) clearedLevels.push(j);
   }
 
   return clearedLevels;
 }
 
 export function clearLayers(levelsToBeCleared = []) {
-  for(let level of levelsToBeCleared) {
-    for(let i = +gameArea.dataset.width; i > 0; i--) {
+  for (let level of levelsToBeCleared) {
+    for (let i = +gameArea.dataset.width; i > 0; i--) {
       let cell = utility.getCellFromData(i, level, gameArea);
       cell.classList.remove("fixed");
+      sound.playSFX("lineCleared");
     }
   }
 }

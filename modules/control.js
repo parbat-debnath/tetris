@@ -1,5 +1,6 @@
-import * as main from'../game.js'
-import * as utility from './utility.js'
+import * as main from "../game.js";
+import * as utility from "./utility.js";
+import * as sound from "./sound.js";
 
 const control = document.querySelector("#control");
 control.focus();
