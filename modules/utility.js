@@ -1,3 +1,5 @@
+import * as main from '../game.js';
+
 export function loadGrid(height = 24, width = 12, container) {
   for (let j = 1; j <= height; j++) {
     for (let i = 1; i <= width; i++) {
@@ -164,3 +166,31 @@ export function resetToBottom(container) {
 
   if(needToRecurtion) resetToBottom(container);
 }
+
+// Gameover popup
+
+export function showGameOverPopup(container) {
+  return new Promise(function (resolve) {
+
+    const popup = document.createElement('div');
+    popup.classList.add('game-over-popup');
+    const gameOverHeading = document.createElement('h1');
+    gameOverHeading.classList.add('game-over-heading');
+    gameOverHeading.textContent = 'GAME OVER';
+    
+    const playAgainBtn = document.createElement('button');
+    playAgainBtn.classList.add('play-again-btn');
+    playAgainBtn.textContent = 'PLAY AGAIN';
+    playAgainBtn.addEventListener('click', () => {
+      container.removeChild(popup);
+      resolve();
+      main.restart();
+    })
+    
+    
+    popup.appendChild(gameOverHeading);
+    popup.appendChild(playAgainBtn);
+    
+    container.appendChild(popup);
+  });
+  }

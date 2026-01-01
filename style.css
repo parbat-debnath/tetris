@@ -130,3 +130,39 @@ body {
     color: black;
     background-color: azure;
 }
+
+/* game over popup */
+
+.game-over-popup{
+    position: fixed;
+    background-color: rgba(0, 0, 0, 0.5);
+    box-sizing: border-box;
+    width: 100%;
+    padding: 7vw;
+    display: flex;
+    flex-direction: column;
+    z-index: 5;
+    transform: translate(0, -50%);
+    top: 50%;
+    font-family: "Silkscreen", sans-serif;
+    color: white;
+}
+.game-over-heading {
+    text-align: center;
+    margin-bottom: 5vw;
+}
+.play-again-btn {
+    margin-right: 30%;
+    margin-left: 30%;
+    padding: 15px;
+    font-family: "Silkscreen", sans-serif;
+    font-size: 25px;
+    border: 3px solid white;
+    background-color: transparent;
+    color: white;
+    transition: 0.3s;
+}
+.play-again-btn:hover {
+    color: black;
+    background-color: azure;
+}

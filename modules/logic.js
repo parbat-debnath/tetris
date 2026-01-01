@@ -1,8 +1,14 @@
 import * as utility from "./utility.js";
 import * as main from "../game.js";
 
+export let currentY;
+
+export function increaseCurrentYBy(number) {
+  currentY += number;
+}
+
 export function freeFallChunk(chunkData, container, speed) {
-  let currentY = utility.getHighestYCoord(chunkData);
+  currentY = utility.getHighestYCoord(chunkData);
   return new Promise(function (resolve, reject) {
     let currentTaskId = setInterval(() => {
       if (canMoveDown(main.currentChunkData, container)) {

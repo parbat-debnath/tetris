@@ -136,10 +136,13 @@ export function restart() {
 
 function gameOver() {
   sound.playSFX("gameOver");
-  alert("Game Over : double press enter to restart");
-  updateScore(0);
-  utility.clearContiner(gameArea);
-  return;
+  gameStarted = false;
+  utility.showGameOverPopup(popupContainer).then(() => {
+    gameStarted = true;
+    updateScore(0);
+    utility.clearContiner(gameArea);
+    return;
+  });
 }
 
 function dropRandomChunk(chunks) {
@@ -283,6 +286,7 @@ export function moveBottom() {
       let cell = utility.getCellFromData(cellData.x, cellData.y, gameArea);
       cell.classList.add("active"); // adding "active" from current chunk
     }
+    logic.increaseCurrentYBy(1);
   }
   if (canPlaySound) {
     sound.playSFX("teleportDown");
@@ -416,5 +420,6 @@ tutorial.showPCTutorial(popupContainer)
 .then(() => {
   scoreBoardHolder.style.display = "block";
   gameStarted = true;
+  document.documentElement.requestFullscreen();
   gameStart();
 });
